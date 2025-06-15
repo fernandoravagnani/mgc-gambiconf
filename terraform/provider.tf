@@ -3,7 +3,7 @@
 terraform {
   required_providers {
     magalucloud = {
-      source  = "MagaluCloud/magalucloud"
+      source  = "magalucloud/mgc"
       version = "0.33.0"
     }
   }
