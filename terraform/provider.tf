@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-provider "magalucloud" {
+provider "mgc" {
   access_key = var.mgc_access_key
   secret_key = var.mgc_secret_key
 }
