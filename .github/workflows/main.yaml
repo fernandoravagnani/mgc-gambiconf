@@ -1,0 +1,43 @@
+# .github/workflows/main.yml
+
+name: 'Terraform IaC - Deploy K8s na Magalu Cloud'
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Permite acionar manualmente
+
+jobs:
+  terraform:
+    name: 'Apply Terraform'
+    runs-on: ubuntu-latest
+    
+    env:
+      # Passa as credenciais para o ambiente do runner
+      MGC_ACCESS_KEY: ${{ secrets.MGC_ACCESS_KEY }}
+      MGC_SECRET_KEY: ${{ secrets.MGC_SECRET_KEY }}
+      
+    defaults:
+      run:
+        # Define o diretório de trabalho padrão para todos os comandos
+        working-directory: ./terraform
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: 'Terraform Init'
+        id: init
+        run: terraform init
+
+      - name: 'Terraform Plan'
+        id: plan
+        run: terraform plan -no-color -var="mgc_access_key=${{ secrets.MGC_ACCESS_KEY }}" -var="mgc_secret_key=${{ secrets.MGC_SECRET_KEY }}"
+
+      - name: 'Terraform Apply'
+        id: apply
+        run: terraform apply -auto-approve -var="mgc_access_key=${{ secrets.MGC_ACCESS_KEY }}" -var="mgc_secret_key=${{ secrets.MGC_SECRET_KEY }}"
